@@ -38,7 +38,7 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        gcloud compute ssh meet-bot --zone=your-zone --command="
+        gcloud compute ssh meet-bot --zone=asia-southeast1-b --command="
         cd /opt/meet-bot &&
         git pull &&
         source venv/bin/activate &&
