@@ -1,7 +1,5 @@
 # meet_automation/google_meet.py
-
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import datetime
 
@@ -13,9 +11,10 @@ class GoogleMeetManager:
         self.service = build('calendar', 'v3', credentials=self.credentials)
     
     def _get_credentials(self, credentials_path):
-        flow = InstalledAppFlow.from_client_secrets_file(
-            credentials_path, self.SCOPES)
-        return flow.run_local_server(port=0)
+        return service_account.Credentials.from_service_account_file(
+            credentials_path,
+            scopes=self.SCOPES
+        )
     
     def create_meeting(self, summary, start_time, duration_minutes=60):
         event = {

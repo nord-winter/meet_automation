@@ -4,7 +4,7 @@ from pydub import AudioSegment
 
 class TranscriptionManager:
     def __init__(self):
-        self.model = whisper.load_model("base")
+        self.model = whisper.load_model("turbo")
     
     def transcribe_audio(self, audio_path):
         # Конвертация аудио в формат WAV, если необходимо
