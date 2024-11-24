@@ -2,7 +2,7 @@ name: Deploy to Google Cloud
 
 on:
   push:
-    branches: [ main ] 
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -22,13 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install flake8  # для проверки кода
 
-    - name: Run tests and linting
-      run: |
-        flake8 . --count --exit-zero --statistics
-        # здесь можно добавить запуск тестов, если они есть
-        
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -38,10 +32,13 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        gcloud compute ssh meet-bot --zone=asia-southeast1-b --command="
-        cd /opt/meet-bot &&
-        git pull &&
-        source venv/bin/activate &&
-        pip install -r requirements.txt &&
-        sudo systemctl restart meet-bot
+        gcloud compute ssh ascender_thailand@alfmeetbot \
+        --zone=asia-southeast1-b \
+        --ssh-key-file=~/.ssh/google_compute_engine \
+        --command="
+          cd /home/ascender_thailand/meet_automation &&
+          git pull &&
+          source venv/bin/activate &&
+          pip install -r requirements.txt &&
+          sudo systemctl restart meet-bot
         "
