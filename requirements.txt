@@ -19,6 +19,7 @@ idna==3.10
 jiter==0.7.1
 oauthlib==3.2.2
 openai==1.55.0
+openai-whisper==20231117
 proto-plus==1.25.0
 protobuf==5.28.3
 pyasn1==0.6.1
@@ -38,4 +39,3 @@ tqdm==4.67.0
 typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.2.3
-whisper==1.1.10
