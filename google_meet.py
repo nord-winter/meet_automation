@@ -19,21 +19,25 @@ class GoogleMeetManager:
     def create_meeting(self, summary, start_time, duration_minutes=60):
         event = {
             'summary': summary,
+            'description': 'Meeting created by Meet Bot',
             'start': {
-                'dateTime': start_time.isoformat(),
+                'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                 'timeZone': 'Asia/Bangkok',
             },
             'end': {
-                'dateTime': (start_time + datetime.timedelta(minutes=duration_minutes)).isoformat(),
+                'dateTime': (start_time + datetime.timedelta(minutes=duration_minutes)).strftime("%Y-%m-%dT%H:%M:%S"),
                 'timeZone': 'Asia/Bangkok',
             },
             'conferenceData': {
                 'createRequest': {
-                    'requestId': f"meet_{datetime.datetime.now().timestamp()}",
+                    'requestId': f"meet_{int(datetime.datetime.now().timestamp())}",
                     'conferenceSolutionKey': {
-                        'type': 'eventHangout'
+                        'type': 'hangoutsMeet'
                     }
                 }
+            },
+            'reminders': {
+                'useDefault': True
             }
         }
         
@@ -46,15 +50,18 @@ class GoogleMeetManager:
             event = self.service.events().insert(
                 calendarId='primary',
                 conferenceDataVersion=1,
-                body=event
+                body=event,
+                sendNotifications=True
             ).execute()
             
             print("Event created successfully!")
+            print("Full response:", event)
             
             # Получаем ссылку на встречу
             meet_link = ''
             if 'conferenceData' in event:
                 print("Conference data found in response")
+                print("Conference data:", event['conferenceData'])
                 if 'entryPoints' in event['conferenceData']:
                     for entryPoint in event['conferenceData']['entryPoints']:
                         if entryPoint.get('entryPointType') == 'video':

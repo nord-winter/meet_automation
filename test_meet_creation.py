@@ -10,12 +10,24 @@ def test_meet_creation():
     print(f"Using credentials from: {credentials_path}")
     
     try:
+        # Проверяем наличие файла credentials
+        if not os.path.exists(credentials_path):
+            raise FileNotFoundError(f"Credentials file not found at {credentials_path}")
+            
+        # Проверяем содержимое файла
+        with open(credentials_path, 'r') as f:
+            content = f.read()
+            print("✅ Credentials file found and readable")
+        
         # Создаем экземпляр менеджера
         meet_manager = GoogleMeetManager(credentials_path)
         print("✅ GoogleMeetManager initialized successfully")
         
-        # Создаем тестовую встречу
+        # Создаем тестовую встречу через час
         start_time = datetime.datetime.now() + datetime.timedelta(hours=1)
+        # Округляем до ближайших 5 минут
+        start_time = start_time.replace(minute=start_time.minute // 5 * 5, second=0, microsecond=0)
+        
         meeting_link = meet_manager.create_meeting(
             "Test Meeting",
             start_time,
